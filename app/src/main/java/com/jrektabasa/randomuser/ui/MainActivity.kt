@@ -24,7 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
 import com.jrektabasa.randomuser.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -58,7 +58,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
 @Composable
 fun ProfileAccountScreen(
-    viewModel: GetUserByCountViewModel = viewModel()
+    viewModel: GetUserByCountViewModel = hiltViewModel()
 ) {
     val user = viewModel.user.collectAsState()
     Log.i("ProfileAccountScreen", "ProfileAccountScreen: ${user.value?.results?.get(0)?.email}")
