@@ -1,17 +1,13 @@
-package com.jrektabasa.randomuser
+package com.jrektabasa.randomuser.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -19,21 +15,26 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
 import com.jrektabasa.randomuser.ui.theme.MyApplicationTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+//            val viewModel: GetUserByCountViewModel = viewModel()
             MyApplicationTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
@@ -56,7 +57,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ProfileAccountScreen() {
+fun ProfileAccountScreen(
+    viewModel: GetUserByCountViewModel = viewModel()
+) {
+    val user = viewModel.user.collectAsState()
+    Log.i("ProfileAccountScreen", "ProfileAccountScreen: ${user.value?.results?.get(0)?.email}")
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -95,6 +100,6 @@ fun PasswordTextField() {
 @Composable
 fun GreetingPreview() {
     MyApplicationTheme {
-        ProfileAccountScreen()
+//        ProfileAccountScreen()
     }
 }
