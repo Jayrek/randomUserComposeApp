@@ -78,6 +78,20 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
+    // Coil
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    // Moshi
+    implementation("com.squareup.retrofit2:converter-moshi:2.9.0")
+
+    // OkHttp
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+
+    // Kotlinx serialization
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
+
     // Test
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
