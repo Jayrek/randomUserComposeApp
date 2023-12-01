@@ -19,7 +19,7 @@ class GetUserByCountViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val response = repository.getRandomUserByCount(1)
+            val response = repository.getRandomUserByCount(20)
             _user.value = response
         }
     }
