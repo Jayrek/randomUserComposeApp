@@ -1,10 +1,8 @@
 package com.jrektabasa.randomuser.data
 
-import java.lang.Exception
-
-sealed class Result<out R> {
-    data class Success<out T>(val data: T) : Result<T>()
-    data class Error(val exception: Exception) : Result<Nothing>()
+sealed interface Result<out T> {
+    data class Success<out T>(val data: T) : Result<T>
+    data class Error(val message: String) : Result<Nothing>
 }
 
 fun <T> Result<T>.successOr(fallback: T): T {
