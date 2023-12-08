@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -51,6 +53,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -96,7 +99,7 @@ class MainActivity : ComponentActivity() {
                                 ) {
                                     ActionMenuItem(
                                         label = "List view", onClick = {
-                                            mDisplayMenu = true
+                                            isList = true
                                             mDisplayMenu = false
                                         }
                                     )
@@ -121,7 +124,7 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.fillMaxSize(),
                                 color = MaterialTheme.colorScheme.background
                             ) {
-                                ProfileAccountScreen(isList = isList)
+                                RandomUserList(isList = isList)
                             }
                         }
                     }
@@ -142,13 +145,14 @@ fun ActionMenuItem(label: String, onClick: () -> Unit) {
 }
 
 @Composable
-fun ProfileAccountScreen(
+fun RandomUserList(
     viewModel: GetUserByCountViewModel = hiltViewModel(),
     isList: Boolean = true
 ) {
     val user = viewModel.user.collectAsState()
     if (user.value != null) {
         val userResults: List<UserResult> = user.value!!.results
+        Log.d("TAG", "RandomUserList: $isList")
         if (isList)
             LazyColumn {
                 itemsIndexed(items = userResults) { index, user ->
@@ -162,9 +166,18 @@ fun ProfileAccountScreen(
                 }
             }
         else
-            LazyRow{
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+            ) {
+
                 itemsIndexed(items = userResults) { index, user ->
-                   Text(text = "$index ${user.name.first}")
+                    GridTileUserItem(
+                        icon = user.picture.medium,
+                        name = "${user.name.first} ${user.name.last}",
+                        email = user.email
+                    ) {
+                        Log.d("ListTileUserItem", "$index. ${user.name.first}")
+                    }
                 }
             }
     }
@@ -212,6 +225,60 @@ fun ListTileUserItem(
                     fontWeight = FontWeight.Bold
                 )
                 Text(text = subTitle)
+            }
+        }
+    }
+}
+
+@Composable
+fun GridTileUserItem(icon: String, name: String, email: String, onTap: () -> Unit) {
+    OutlinedCard(
+        modifier = Modifier
+            .padding(all = 5.dp)
+            .fillMaxWidth()
+            .clickable(onClick = onTap),
+        shape = RoundedCornerShape(5.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 5.dp),
+
+        ) {
+        Column(modifier = Modifier.padding(all = 10.dp)) {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                AsyncImage(
+                    model = icon,
+                    contentDescription = "user image",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(50.dp)
+                        .clip(CircleShape)
+                        .border(
+                            width = 1.dp,
+                            color = Color.Black,
+                            shape = CircleShape
+                        ),
+                )
+            }
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = name,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis)
+            }
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = email,
+                    fontSize = 15.sp,
+                    color = Color.Gray,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis)
             }
         }
     }
