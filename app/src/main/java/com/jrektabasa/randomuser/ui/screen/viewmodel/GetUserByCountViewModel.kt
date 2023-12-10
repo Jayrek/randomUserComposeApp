@@ -14,12 +14,13 @@ import javax.inject.Inject
 class GetUserByCountViewModel @Inject constructor(
     private val repository: GetUserByCountRepository
 ) : ViewModel() {
+
     private val _user = MutableStateFlow<RandomUserResult?>(null)
     val user = _user.asStateFlow()
 
-    init {
+    fun getUserByCount(count: Int) {
         viewModelScope.launch {
-            val response = repository.getRandomUserByCount(20)
+            val response = repository.getRandomUserByCount(count)
             _user.value = response
         }
     }
