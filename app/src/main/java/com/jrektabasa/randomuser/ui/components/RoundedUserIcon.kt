@@ -12,17 +12,20 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
 @Composable
-fun RoundedUserIcon(icon: String) {
+fun RoundedUserIcon(
+    icon: String,
+    size: Int = 70
+) {
     AsyncImage(
         model = icon,
         contentDescription = "user image",
         contentScale = ContentScale.Crop,
         modifier = Modifier
-            .size(70.dp)
+            .size(size.dp)
             .clip(CircleShape)
             .border(
                 width = 1.dp,
-                color = Color.Black,
+                color = Color.Gray,
                 shape = CircleShape
             ),
     )
