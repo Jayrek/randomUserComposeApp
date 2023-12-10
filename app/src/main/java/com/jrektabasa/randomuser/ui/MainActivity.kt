@@ -5,7 +5,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import com.jrektabasa.randomuser.ui.screen.UserListScreen
+import com.jrektabasa.randomuser.ui.screen.DashboardScreen
 import com.jrektabasa.randomuser.ui.theme.MyApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -15,7 +15,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApplicationTheme {
-                UserListScreen()
+                DashboardScreen()
+//                UserListScreen()
             }
         }
     }
