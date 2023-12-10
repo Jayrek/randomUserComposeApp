@@ -11,10 +11,18 @@ class GetUserByCountRepositoryImpl @Inject constructor(
     private val api: RandomUserInterface
 ) : GetUserByCountRepository {
     override suspend fun getRandomUserByCount(
-        result: Int
+        page: Int,
+        result: Int,
+        gender: String,
+        nat: List<String>
     ): RandomUserResult {
         return try {
-            api.getRandomUserList(result)
+            api.getRandomUserList(
+                page,
+                result,
+                gender,
+                nat
+            )
         } catch (e: Exception) {
             throw Exception(e.message)
         }

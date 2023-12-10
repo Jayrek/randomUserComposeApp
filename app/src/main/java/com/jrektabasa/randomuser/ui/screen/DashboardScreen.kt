@@ -67,7 +67,7 @@ fun DashboardUserPanel(
     viewModel: GetUserByCountViewModel = hiltViewModel()
 ) {
     LaunchedEffect(true) {
-        viewModel.getUserByCount(1)
+        viewModel.getUserByCount()
     }
 
     val userState = viewModel.user.collectAsState()

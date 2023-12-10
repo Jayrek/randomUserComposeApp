@@ -5,6 +5,9 @@ import com.jrektabasa.randomuser.model.RandomUserResult
 interface GetUserByCountRepository {
 
     suspend fun getRandomUserByCount(
-        result: Int
+        page: Int,
+        result: Int,
+        gender: String,
+        nat: List<String>
     ): RandomUserResult
 }
