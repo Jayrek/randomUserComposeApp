@@ -30,9 +30,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.jrektabasa.randomuser.R
 import com.jrektabasa.randomuser.model.UserResult
 import com.jrektabasa.randomuser.ui.components.RandomUserText
 import com.jrektabasa.randomuser.ui.components.RoundedUserIcon
@@ -43,7 +45,7 @@ import java.time.format.DateTimeParseException
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen() {
+fun DashboardScreen(viewModel: GetUserByCountViewModel = hiltViewModel()) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -53,18 +55,31 @@ fun DashboardScreen() {
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary
                 ),
+                actions = {
+                    ActionIconButton(
+                        modifier = Modifier
+                            .padding(end = 16.dp)
+                            .size(25.dp),
+                        painter = painterResource(
+                            id = R.drawable.refresh_48
+                        ),
+                        description = "refresh",
+                    ) {
+                        viewModel.getUserByCount()
+                    }
+                }
             )
         }
     ) {
         Box(modifier = Modifier.padding(it)) {
-            DashboardUserPanel()
+            DashboardUserPanel(viewModel = viewModel)
         }
     }
 }
 
 @Composable
 fun DashboardUserPanel(
-    viewModel: GetUserByCountViewModel = hiltViewModel()
+    viewModel: GetUserByCountViewModel
 ) {
     LaunchedEffect(true) {
         viewModel.getUserByCount()
@@ -75,7 +90,7 @@ fun DashboardUserPanel(
         val user: List<UserResult> = userState.value!!.results
         Card(
             modifier = Modifier
-                .padding(15.dp),
+                .padding(10.dp),
             shape = RoundedCornerShape(5.dp),
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 5.dp
@@ -83,7 +98,10 @@ fun DashboardUserPanel(
         ) {
             Column(
                 modifier = Modifier
-                    .padding(vertical = 20.dp)
+                    .padding(
+                        top = 20.dp,
+                        bottom = 30.dp
+                    )
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
