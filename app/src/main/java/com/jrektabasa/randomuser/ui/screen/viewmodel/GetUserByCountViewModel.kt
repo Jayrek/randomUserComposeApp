@@ -18,9 +18,19 @@ class GetUserByCountViewModel @Inject constructor(
     private val _user = MutableStateFlow<RandomUserResult?>(null)
     val user = _user.asStateFlow()
 
-    fun getUserByCount(count: Int) {
+    fun getUserByCount(
+        page: Int = 1,
+        result: Int = 1,
+        gender: String = "",
+        nat: List<String> = emptyList()
+    ) {
         viewModelScope.launch {
-            val response = repository.getRandomUserByCount(count)
+            val response = repository.getRandomUserByCount(
+                page,
+                result,
+                gender,
+                nat
+            )
             _user.value = response
         }
     }

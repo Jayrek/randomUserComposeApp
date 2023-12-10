@@ -72,11 +72,15 @@ fun UserListScreen() {
 
 @Composable
 fun ActionIconButton(
+    modifier: Modifier = Modifier,
     painter: Painter,
     description: String = "icon",
     onToggle: () -> Unit
 ) {
-    IconButton(onClick = onToggle) {
+    IconButton(
+        onClick = onToggle,
+        modifier = modifier
+    ) {
         Icon(
             painter = painter,
             contentDescription = description,
