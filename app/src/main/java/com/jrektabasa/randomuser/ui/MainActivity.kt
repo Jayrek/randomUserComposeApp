@@ -22,6 +22,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -93,6 +94,7 @@ class MainActivity : ComponentActivity() {
                                 color = MaterialTheme.colorScheme.background
                             ) {
                                 RandomUserList(
+                                    count = 10,
                                     ascendingOrder = ascendingOrder,
                                     isList = isList
                                 )
@@ -108,9 +110,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun RandomUserList(
     viewModel: GetUserByCountViewModel = hiltViewModel(),
+    count: Int,
     ascendingOrder: Boolean = true,
     isList: Boolean = true
 ) {
+
+    LaunchedEffect(true) {
+        viewModel.getUserByCount(count)
+    }
+
     val user = viewModel.user.collectAsState()
     if (user.value != null) {
         val userResults: List<UserResult> = user.value!!.results
