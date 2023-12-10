@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 @Composable
@@ -30,8 +31,14 @@ fun ListTileUserItem(
         ) {
             RoundedUserIcon(icon = icon)
             Column(modifier = Modifier.padding(all = 20.dp)) {
-                RandomUserNameText(name = name)
-                RandomUserEmailText(email = email)
+                RandomUserText(
+                    label = name,
+                    fontSize = if (name.length >= 12) 15 else 18
+                )
+                RandomUserText(
+                    label = email,
+                    color = Color.Gray
+                )
             }
         }
     }
