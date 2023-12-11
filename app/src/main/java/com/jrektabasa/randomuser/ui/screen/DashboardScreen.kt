@@ -7,35 +7,47 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jrektabasa.randomuser.R
 import com.jrektabasa.randomuser.model.UserResult
+import com.jrektabasa.randomuser.model.userCountList
 import com.jrektabasa.randomuser.ui.components.RandomUserText
 import com.jrektabasa.randomuser.ui.components.RoundedUserIcon
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
@@ -46,33 +58,30 @@ import java.time.format.DateTimeParseException
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(viewModel: GetUserByCountViewModel = hiltViewModel()) {
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = "Random User Generator", color = Color.White)
-                },
-                colors = TopAppBarDefaults.smallTopAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primary
+    Scaffold(topBar = {
+        TopAppBar(title = {
+            Text(text = "Random User Generator", color = Color.White)
+        }, colors = TopAppBarDefaults.smallTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary
+        ), actions = {
+            ActionIconButton(
+                modifier = Modifier
+                    .padding(end = 16.dp)
+                    .size(25.dp),
+                painter = painterResource(
+                    id = R.drawable.refresh_48
                 ),
-                actions = {
-                    ActionIconButton(
-                        modifier = Modifier
-                            .padding(end = 16.dp)
-                            .size(25.dp),
-                        painter = painterResource(
-                            id = R.drawable.refresh_48
-                        ),
-                        description = "refresh",
-                    ) {
-                        viewModel.getUserByCount()
-                    }
-                }
-            )
-        }
-    ) {
+                description = "refresh",
+            ) {
+                viewModel.getUserByCount()
+            }
+        })
+    }) {
         Box(modifier = Modifier.padding(it)) {
-            DashboardUserPanel(viewModel = viewModel)
+            Column {
+                DashboardUserPanel(viewModel = viewModel)
+                GenerateUserPanel()
+            }
         }
     }
 }
@@ -89,8 +98,7 @@ fun DashboardUserPanel(
     if (userState.value != null) {
         val user: List<UserResult> = userState.value!!.results
         Card(
-            modifier = Modifier
-                .padding(10.dp),
+            modifier = Modifier.padding(10.dp),
             shape = RoundedCornerShape(5.dp),
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 5.dp
@@ -99,8 +107,7 @@ fun DashboardUserPanel(
             Column(
                 modifier = Modifier
                     .padding(
-                        top = 20.dp,
-                        bottom = 30.dp
+                        top = 20.dp, bottom = 30.dp
                     )
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
@@ -124,14 +131,12 @@ fun DashboardUserPanel(
                             modifier = Modifier.padding(vertical = 24.dp)
                         ) {
                             RoundedUserIcon(
-                                icon = user[0].picture.large,
-                                size = 120
+                                icon = user[0].picture.large, size = 120
                             )
                         }
                     }
                     RandomUserText(
-                        label = "Hi, my name is",
-                        color = Color.Gray
+                        label = "Hi, my name is", color = Color.Gray
                     )
                     RandomUserText(
                         label = "${user[0].name.first} ${user[0].name.last}",
@@ -139,8 +144,7 @@ fun DashboardUserPanel(
                         fontWeight = FontWeight.Bold
                     )
                     UserInfoRow(
-                        image = Icons.Default.Email,
-                        label = user[0].email
+                        image = Icons.Default.Email, label = user[0].email
                     )
 
                     UserInfoRow(
@@ -161,6 +165,88 @@ fun DashboardUserPanel(
     }
 }
 
+@Composable
+fun GenerateUserPanel() {
+    Row(
+        modifier = Modifier
+            .padding(
+                top = 20.dp, bottom = 30.dp
+            )
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column {
+            UserCountDropDown()
+        }
+
+        Box {
+            Button(onClick = { /*TODO*/ }) {
+                Text(text = "Generate")
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UserCountDropDown() {
+    var isExpanded by remember { mutableStateOf(false) }
+    var text by remember {
+        mutableStateOf("by 10")
+    }
+    var count by remember {
+        mutableIntStateOf(10)
+    }
+    Text(text = "Generate users:", color = Color.Black)
+    ExposedDropdownMenuBox(
+        expanded = isExpanded,
+        onExpandedChange = { isExpanded = it },
+        modifier = Modifier.widthIn(
+            min = 100.dp, max = 140.dp
+        )
+    ) {
+        TextField(
+            value = text,
+            onValueChange = { },
+            readOnly = true,
+            textStyle = MaterialTheme.typography.bodyLarge.copy(
+                textAlign = TextAlign.Center
+            ),
+            modifier = Modifier.menuAnchor()
+        )
+        ExposedDropdownMenu(
+            expanded = isExpanded,
+            onDismissRequest = { isExpanded = false }) {
+            userCountList.forEach { items ->
+                GenerateDropDownMenuItem(
+                    label = items.label,
+                    onClick = {
+                        isExpanded = false
+                        text = items.label
+                        count = items.count
+                    })
+            }
+        }
+    }
+}
+
+@Composable
+fun GenerateDropDownMenuItem(
+    label: String,
+    onClick: () -> Unit
+) {
+    DropdownMenuItem(
+        text = {
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) { Text(text = label) }
+        },
+        onClick = onClick
+    )
+}
+
 fun formatDate(date: String): String {
     val formatter = DateTimeFormatter.ofPattern(
         "MMM dd, yyyy"
@@ -174,8 +260,7 @@ fun formatDate(date: String): String {
 
 @Composable
 fun UserInfoRow(
-    image: ImageVector,
-    label: String
+    image: ImageVector, label: String
 ) {
     Row {
         Icon(
@@ -185,8 +270,8 @@ fun UserInfoRow(
             tint = Color.Gray
         )
         RandomUserText(
-            label = label,
-            color = Color.Gray
+            label = label, color = Color.Gray
         )
     }
 }
+
