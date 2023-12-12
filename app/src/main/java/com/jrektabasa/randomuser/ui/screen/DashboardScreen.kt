@@ -3,11 +3,16 @@ package com.jrektabasa.randomuser.ui.screen
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -23,6 +28,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -43,6 +50,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jrektabasa.randomuser.R
@@ -77,6 +85,7 @@ fun DashboardScreen(viewModel: GetUserByCountViewModel = hiltViewModel()) {
             }
         })
     }) {
+
         Box(modifier = Modifier.padding(it)) {
             Column {
                 DashboardUserPanel(viewModel = viewModel)
@@ -98,7 +107,7 @@ fun DashboardUserPanel(
     if (userState.value != null) {
         val user: List<UserResult> = userState.value!!.results
         Card(
-            modifier = Modifier.padding(10.dp),
+            modifier = Modifier.padding(5.dp),
             shape = RoundedCornerShape(5.dp),
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 5.dp
@@ -106,9 +115,7 @@ fun DashboardUserPanel(
         ) {
             Column(
                 modifier = Modifier
-                    .padding(
-                        top = 20.dp, bottom = 30.dp
-                    )
+                    .padding(vertical = 10.dp)
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -169,21 +176,20 @@ fun DashboardUserPanel(
 fun GenerateUserPanel() {
     Row(
         modifier = Modifier
-            .padding(
-                top = 20.dp, bottom = 30.dp
-            )
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(horizontal = 5.dp),
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
             UserCountDropDown()
+            UserNationalityRadioButton()
         }
-
-        Box {
-            Button(onClick = { /*TODO*/ }) {
-                Text(text = "Generate")
-            }
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            CustomButton()
         }
     }
 }
@@ -192,40 +198,42 @@ fun GenerateUserPanel() {
 @Composable
 fun UserCountDropDown() {
     var isExpanded by remember { mutableStateOf(false) }
-    var text by remember {
-        mutableStateOf("by 10")
-    }
-    var count by remember {
-        mutableIntStateOf(10)
-    }
-    Text(text = "Generate users:", color = Color.Black)
-    ExposedDropdownMenuBox(
-        expanded = isExpanded,
-        onExpandedChange = { isExpanded = it },
-        modifier = Modifier.widthIn(
-            min = 100.dp, max = 140.dp
+    var text by remember { mutableStateOf("by 10") }
+    var count by remember { mutableIntStateOf(10) }
+    Column {
+        Text(
+            text = "Generate users:",
+            color = Color.Black,
+            modifier = Modifier.padding(top = 10.dp)
         )
-    ) {
-        TextField(
-            value = text,
-            onValueChange = { },
-            readOnly = true,
-            textStyle = MaterialTheme.typography.bodyLarge.copy(
-                textAlign = TextAlign.Center
-            ),
-            modifier = Modifier.menuAnchor()
-        )
-        ExposedDropdownMenu(
+        ExposedDropdownMenuBox(
             expanded = isExpanded,
-            onDismissRequest = { isExpanded = false }) {
-            userCountList.forEach { items ->
-                GenerateDropDownMenuItem(
-                    label = items.label,
-                    onClick = {
-                        isExpanded = false
-                        text = items.label
-                        count = items.count
-                    })
+            onExpandedChange = { isExpanded = it },
+            modifier = Modifier.widthIn(
+                min = 140.dp, max = 180.dp
+            )
+        ) {
+            TextField(
+                value = text,
+                onValueChange = { },
+                readOnly = true,
+                textStyle = MaterialTheme.typography.bodyLarge.copy(
+                    textAlign = TextAlign.Center
+                ),
+                modifier = Modifier.menuAnchor()
+            )
+            ExposedDropdownMenu(
+                expanded = isExpanded,
+                onDismissRequest = { isExpanded = false }) {
+                userCountList.forEach { items ->
+                    GenerateDropDownMenuItem(
+                        label = items.label,
+                        onClick = {
+                            isExpanded = false
+                            text = items.label
+                            count = items.count
+                        })
+                }
             }
         }
     }
@@ -273,5 +281,74 @@ fun UserInfoRow(
             label = label, color = Color.Gray
         )
     }
+}
+
+@Composable
+fun UserNationalityRadioButton() {
+    val radioOptions = listOf(
+        "AU", "CA", "ES", "US",
+    )
+    var selectedOption by remember { mutableStateOf(radioOptions[0]) }
+    Column {
+        Text(
+            text = "Nationality:",
+            color = Color.Black,
+            modifier = Modifier.padding(top = 20.dp)
+        )
+        Box(
+            modifier = Modifier
+                .width(200.dp)
+        ) {
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                horizontalArrangement = Arrangement.Center,
+            ) {
+                itemsIndexed(items = radioOptions) { _, option ->
+                    Box(
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .align(Alignment.Center)
+                    ) {
+                        Row {
+                            RadioButton(
+                                selected = option == selectedOption,
+                                onClick = { selectedOption = option },
+                                colors = RadioButtonDefaults.colors(
+                                    selectedColor = MaterialTheme.colorScheme.primary
+                                )
+                            )
+                            Text(
+                                text = option,
+                                style = MaterialTheme.typography.bodyLarge,
+                                modifier = Modifier.padding(vertical = 10.dp)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun CustomButton() {
+    Box(
+        contentAlignment = Alignment.Center
+    ) {
+        Button(
+            modifier = Modifier
+                .fillMaxWidth(),
+            contentPadding = PaddingValues(vertical = 40.dp),
+            shape = RoundedCornerShape(5.dp),
+            onClick = { /*TODO*/ }) {
+            Text(text = "Generate")
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewDashboardScreen() {
+    GenerateUserPanel()
 }
 

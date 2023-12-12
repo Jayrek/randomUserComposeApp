@@ -23,7 +23,7 @@ fun RandomUserList(
 ) {
 
     LaunchedEffect(true) {
-        viewModel.getUserByCount(count)
+        viewModel.getUserByCount(result = count)
     }
 
     val user = viewModel.user.collectAsState()
