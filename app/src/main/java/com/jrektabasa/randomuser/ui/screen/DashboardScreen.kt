@@ -1,5 +1,6 @@
 package com.jrektabasa.randomuser.ui.screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -12,7 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -22,14 +23,14 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.Divider
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.RadioButton
-import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -54,7 +55,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.jrektabasa.randomuser.R
+import com.jrektabasa.randomuser.model.Nationality
 import com.jrektabasa.randomuser.model.UserResult
+import com.jrektabasa.randomuser.model.nationalities
 import com.jrektabasa.randomuser.model.userCountList
 import com.jrektabasa.randomuser.ui.components.RandomUserText
 import com.jrektabasa.randomuser.ui.components.RoundedUserIcon
@@ -174,6 +177,8 @@ fun DashboardUserPanel(
 
 @Composable
 fun GenerateUserPanel() {
+    var count by remember { mutableIntStateOf(10) }
+//    var nationalityList = remember { mutableListOf<Nationality>() }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -182,24 +187,37 @@ fun GenerateUserPanel() {
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
-            UserCountDropDown()
-            UserNationalityRadioButton()
+            UserCountDropDown(onCountChange = { count = it })
+            UserNationalityRadioButton(nationalities = nationalities) { option ->
+                option.isSelected = !option.isSelected
+                Log.d("updatedOnCheckedChange", "updatedOnCheckedChange: $option")
+            }
         }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-            CustomButton()
+
+            CustomButton(count, nationalities)
         }
     }
 }
 
+@Composable
+fun CheckBoxDemo() {
+    val checkedState = remember { mutableStateOf(true) }
+    Checkbox(
+        checked = checkedState.value,
+        onCheckedChange = { checkedState.value = it }
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserCountDropDown() {
+fun UserCountDropDown(onCountChange: (Int) -> Unit) {
     var isExpanded by remember { mutableStateOf(false) }
     var text by remember { mutableStateOf("by 10") }
-    var count by remember { mutableIntStateOf(10) }
+//    var count by remember { mutableIntStateOf(10) }
     Column {
         Text(
             text = "Generate users:",
@@ -227,12 +245,12 @@ fun UserCountDropDown() {
                 onDismissRequest = { isExpanded = false }) {
                 userCountList.forEach { items ->
                     GenerateDropDownMenuItem(
-                        label = items.label,
-                        onClick = {
-                            isExpanded = false
-                            text = items.label
-                            count = items.count
-                        })
+                        label = items.label
+                    ) {
+                        isExpanded = false
+                        text = items.label
+                        onCountChange(items.count)
+                    }
                 }
             }
         }
@@ -284,11 +302,10 @@ fun UserInfoRow(
 }
 
 @Composable
-fun UserNationalityRadioButton() {
-    val radioOptions = listOf(
-        "AU", "CA", "ES", "US",
-    )
-    var selectedOption by remember { mutableStateOf(radioOptions[0]) }
+fun UserNationalityRadioButton(
+    nationalities: List<Nationality>,
+    onOptionSelected: (Nationality) -> Unit
+) {
     Column {
         Text(
             text = "Nationality:",
@@ -303,27 +320,32 @@ fun UserNationalityRadioButton() {
                 columns = GridCells.Fixed(2),
                 horizontalArrangement = Arrangement.Center,
             ) {
-                itemsIndexed(items = radioOptions) { _, option ->
+                items(items = nationalities) { option ->
+                    Log.d("TAG", "UserNationalityRadioButton: ${option.code}")
                     Box(
                         modifier = Modifier
                             .padding(5.dp)
                             .align(Alignment.Center)
                     ) {
+
                         Row {
-                            RadioButton(
-                                selected = option == selectedOption,
-                                onClick = { selectedOption = option },
-                                colors = RadioButtonDefaults.colors(
-                                    selectedColor = MaterialTheme.colorScheme.primary
-                                )
+                            Checkbox(
+                                checked = option.isSelected,
+                                onCheckedChange = { checked ->
+                                    option.isSelected = checked
+                                    onOptionSelected(option)
+                                },
+                                colors = CheckboxDefaults.colors(MaterialTheme.colorScheme.primary),
+                                modifier = Modifier.padding(end = 8.dp)
                             )
                             Text(
-                                text = option,
+                                text = option.code,
                                 style = MaterialTheme.typography.bodyLarge,
                                 modifier = Modifier.padding(vertical = 10.dp)
                             )
                         }
                     }
+
                 }
             }
         }
@@ -331,7 +353,7 @@ fun UserNationalityRadioButton() {
 }
 
 @Composable
-fun CustomButton() {
+fun CustomButton(count: Int, nat: List<Nationality>) {
     Box(
         contentAlignment = Alignment.Center
     ) {
@@ -340,7 +362,10 @@ fun CustomButton() {
                 .fillMaxWidth(),
             contentPadding = PaddingValues(vertical = 40.dp),
             shape = RoundedCornerShape(5.dp),
-            onClick = { /*TODO*/ }) {
+            onClick = {
+                Log.d("count", "CustomButton: $count")
+                Log.d("nat", "CustomButton: $nat")
+            }) {
             Text(text = "Generate")
         }
     }
@@ -350,5 +375,18 @@ fun CustomButton() {
 @Composable
 fun PreviewDashboardScreen() {
     GenerateUserPanel()
+}
+
+@Composable
+fun CheckBoxDemo(
+    checkedState: Boolean,
+    onCheckedChange: (Boolean) -> Unit
+) {
+    Checkbox(
+        checked = checkedState,
+        onCheckedChange = { newCheckedState ->
+            onCheckedChange(newCheckedState)
+        }
+    )
 }
 
