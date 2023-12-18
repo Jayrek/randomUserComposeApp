@@ -65,43 +65,20 @@ import com.jrektabasa.randomuser.model.nationalities
 import com.jrektabasa.randomuser.model.userCountList
 import com.jrektabasa.randomuser.ui.components.RandomUserText
 import com.jrektabasa.randomuser.ui.components.RoundedUserIcon
+import com.jrektabasa.randomuser.ui.screen.viewmodel.GenerateUserViewModel
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
+import com.jrektabasa.randomuser.ui.utils.Screens
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
-@Composable
-fun RandomUserApp(
-    navController: NavHostController = rememberNavController()
-) {
-    NavHost(
-        navController = navController,
-        startDestination = "dashboard"
-    ) {
-        composable(
-            route = "dashboard",
-        ) {
-            DashboardScreen(onGenerateUserClicked = { navController.navigate("user") })
-        }
-        composable(
-            route = "user",
-            arguments = listOf(navArgument("count") { defaultValue = "2" })
-        ) { backStackEntry ->
-            val count = backStackEntry.arguments?.getString("count")
-            Log.d("count", "RandomUserApp: $count")
-            count?.toInt()?.let { userCount -> UserListScreen(count = userCount) }
-        }
-    }
-
-}
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
-    viewModel: GetUserByCountViewModel = hiltViewModel(),
+    getUserByCountViewModel: GetUserByCountViewModel,
+    generateUserViewModel: GenerateUserViewModel,
     onGenerateUserClicked: () -> Unit
 ) {
-
     Scaffold(topBar = {
         TopAppBar(title = {
             Text(text = "Random User Generator", color = Color.White)
@@ -117,15 +94,18 @@ fun DashboardScreen(
                 ),
                 description = "refresh",
             ) {
-                viewModel.getUserByCount()
+                getUserByCountViewModel.getUserByCount()
             }
         })
     }) {
 
         Box(modifier = Modifier.padding(it)) {
             Column {
-                DashboardUserPanel(viewModel = viewModel)
-                GenerateUserPanel(onGenerateUser = onGenerateUserClicked)
+                DashboardUserPanel(viewModel = getUserByCountViewModel)
+                GenerateUserPanel(
+                    viewModel = generateUserViewModel,
+                    onGenerateUser = onGenerateUserClicked
+                )
             }
         }
     }
@@ -210,6 +190,7 @@ fun DashboardUserPanel(
 
 @Composable
 fun GenerateUserPanel(
+    viewModel: GenerateUserViewModel,
     onGenerateUser: () -> Unit
 ) {
     var count by remember { mutableIntStateOf(10) }
@@ -222,7 +203,9 @@ fun GenerateUserPanel(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
-            UserCountDropDown(onCountChange = { count = it })
+            UserCountDropDown(
+                viewModel = viewModel,
+                onCountChange = { count = it })
             UserNationalityRadioButton(nationalities = nationalities) { option ->
                 option.isSelected = !option.isSelected
                 Log.d("updatedOnCheckedChange", "updatedOnCheckedChange: $option")
@@ -242,15 +225,13 @@ fun GenerateUserPanel(
     }
 }
 
-@Composable
-fun CheckBoxDemo() {
-    val checkedState = remember { mutableStateOf(true) }
-    Checkbox(checked = checkedState.value, onCheckedChange = { checkedState.value = it })
-}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserCountDropDown(onCountChange: (Int) -> Unit) {
+fun UserCountDropDown(
+    viewModel: GenerateUserViewModel,
+    onCountChange: (Int) -> Unit
+) {
     var isExpanded by remember { mutableStateOf(false) }
     var text by remember { mutableStateOf("by 10") }
 //    var count by remember { mutableIntStateOf(10) }
@@ -281,6 +262,7 @@ fun UserCountDropDown(onCountChange: (Int) -> Unit) {
                     ) {
                         isExpanded = false
                         text = items.label
+                        viewModel.setUserCount(items.count)
                         onCountChange(items.count)
                     }
                 }
@@ -396,3 +378,8 @@ fun CustomButton(
     }
 }
 
+@Composable
+fun CheckBoxDemo() {
+    val checkedState = remember { mutableStateOf(true) }
+    Checkbox(checked = checkedState.value, onCheckedChange = { checkedState.value = it })
+}
