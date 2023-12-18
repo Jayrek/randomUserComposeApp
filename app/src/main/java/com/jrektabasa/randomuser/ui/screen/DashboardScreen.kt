@@ -54,6 +54,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.jrektabasa.randomuser.R
 import com.jrektabasa.randomuser.model.Nationality
 import com.jrektabasa.randomuser.model.UserResult
@@ -66,9 +72,39 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException
 
+
+@Composable
+fun RandomUserApp(
+    navController: NavHostController = rememberNavController()
+) {
+    NavHost(
+        navController = navController,
+        startDestination = "dashboard"
+    ) {
+        composable(
+            route = "dashboard",
+        ) {
+            DashboardScreen(onGenerateUserClicked = { navController.navigate("user") })
+        }
+        composable(
+            route = "user",
+            arguments = listOf(navArgument("count") { defaultValue = "2" })
+        ) { backStackEntry ->
+            val count = backStackEntry.arguments?.getString("count")
+            Log.d("count", "RandomUserApp: $count")
+            count?.toInt()?.let { userCount -> UserListScreen(count = userCount) }
+        }
+    }
+
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DashboardScreen(viewModel: GetUserByCountViewModel = hiltViewModel()) {
+fun DashboardScreen(
+    viewModel: GetUserByCountViewModel = hiltViewModel(),
+    onGenerateUserClicked: () -> Unit
+) {
+
     Scaffold(topBar = {
         TopAppBar(title = {
             Text(text = "Random User Generator", color = Color.White)
@@ -92,7 +128,7 @@ fun DashboardScreen(viewModel: GetUserByCountViewModel = hiltViewModel()) {
         Box(modifier = Modifier.padding(it)) {
             Column {
                 DashboardUserPanel(viewModel = viewModel)
-                GenerateUserPanel()
+                GenerateUserPanel(onGenerateUser = onGenerateUserClicked)
             }
         }
     }
@@ -176,7 +212,9 @@ fun DashboardUserPanel(
 }
 
 @Composable
-fun GenerateUserPanel() {
+fun GenerateUserPanel(
+    onGenerateUser: () -> Unit
+) {
     var count by remember { mutableIntStateOf(10) }
 //    var nationalityList = remember { mutableListOf<Nationality>() }
     Row(
@@ -198,7 +236,11 @@ fun GenerateUserPanel() {
             verticalArrangement = Arrangement.Center,
         ) {
 
-            CustomButton(count, nationalities)
+            CustomButton(
+                count,
+                nationalities,
+                onGenerateClicked = onGenerateUser
+            )
         }
     }
 }
@@ -206,10 +248,7 @@ fun GenerateUserPanel() {
 @Composable
 fun CheckBoxDemo() {
     val checkedState = remember { mutableStateOf(true) }
-    Checkbox(
-        checked = checkedState.value,
-        onCheckedChange = { checkedState.value = it }
-    )
+    Checkbox(checked = checkedState.value, onCheckedChange = { checkedState.value = it })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -220,9 +259,7 @@ fun UserCountDropDown(onCountChange: (Int) -> Unit) {
 //    var count by remember { mutableIntStateOf(10) }
     Column {
         Text(
-            text = "Generate users:",
-            color = Color.Black,
-            modifier = Modifier.padding(top = 10.dp)
+            text = "Generate users:", color = Color.Black, modifier = Modifier.padding(top = 10.dp)
         )
         ExposedDropdownMenuBox(
             expanded = isExpanded,
@@ -240,9 +277,7 @@ fun UserCountDropDown(onCountChange: (Int) -> Unit) {
                 ),
                 modifier = Modifier.menuAnchor()
             )
-            ExposedDropdownMenu(
-                expanded = isExpanded,
-                onDismissRequest = { isExpanded = false }) {
+            ExposedDropdownMenu(expanded = isExpanded, onDismissRequest = { isExpanded = false }) {
                 userCountList.forEach { items ->
                     GenerateDropDownMenuItem(
                         label = items.label
@@ -259,8 +294,7 @@ fun UserCountDropDown(onCountChange: (Int) -> Unit) {
 
 @Composable
 fun GenerateDropDownMenuItem(
-    label: String,
-    onClick: () -> Unit
+    label: String, onClick: () -> Unit
 ) {
     DropdownMenuItem(
         text = {
@@ -268,8 +302,7 @@ fun GenerateDropDownMenuItem(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) { Text(text = label) }
-        },
-        onClick = onClick
+        }, onClick = onClick
     )
 }
 
@@ -303,18 +336,14 @@ fun UserInfoRow(
 
 @Composable
 fun UserNationalityRadioButton(
-    nationalities: List<Nationality>,
-    onOptionSelected: (Nationality) -> Unit
+    nationalities: List<Nationality>, onOptionSelected: (Nationality) -> Unit
 ) {
     Column {
         Text(
-            text = "Nationality:",
-            color = Color.Black,
-            modifier = Modifier.padding(top = 20.dp)
+            text = "Nationality:", color = Color.Black, modifier = Modifier.padding(top = 20.dp)
         )
         Box(
-            modifier = Modifier
-                .width(200.dp)
+            modifier = Modifier.width(200.dp)
         ) {
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
@@ -353,40 +382,20 @@ fun UserNationalityRadioButton(
 }
 
 @Composable
-fun CustomButton(count: Int, nat: List<Nationality>) {
+fun CustomButton(
+    count: Int, nat: List<Nationality>, onGenerateClicked: () -> Unit
+) {
     Box(
         contentAlignment = Alignment.Center
     ) {
         Button(
-            modifier = Modifier
-                .fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(vertical = 40.dp),
             shape = RoundedCornerShape(5.dp),
-            onClick = {
-                Log.d("count", "CustomButton: $count")
-                Log.d("nat", "CustomButton: $nat")
-            }) {
+            onClick = onGenerateClicked
+        ) {
             Text(text = "Generate")
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewDashboardScreen() {
-    GenerateUserPanel()
-}
-
-@Composable
-fun CheckBoxDemo(
-    checkedState: Boolean,
-    onCheckedChange: (Boolean) -> Unit
-) {
-    Checkbox(
-        checked = checkedState,
-        onCheckedChange = { newCheckedState ->
-            onCheckedChange(newCheckedState)
-        }
-    )
 }
 
