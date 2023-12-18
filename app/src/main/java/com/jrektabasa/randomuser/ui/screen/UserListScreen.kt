@@ -24,7 +24,7 @@ import com.jrektabasa.randomuser.ui.components.RandomUserList
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun UserListScreen() {
+fun UserListScreen(count: Int) {
     var ascendingOrder by remember { mutableStateOf(true) }
     var isList by remember { mutableStateOf(true) }
     Scaffold(
@@ -61,7 +61,7 @@ fun UserListScreen() {
         content = {
             Box(modifier = Modifier.padding(it)) {
                 RandomUserList(
-                    count = 10,
+                    count = count,
                     ascendingOrder = ascendingOrder,
                     isList = isList
                 )
