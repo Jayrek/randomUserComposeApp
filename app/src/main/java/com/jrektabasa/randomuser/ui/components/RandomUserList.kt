@@ -9,24 +9,23 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.jrektabasa.randomuser.model.UserResult
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
 
 
 @Composable
 fun RandomUserList(
-    viewModel: GetUserByCountViewModel = hiltViewModel(),
+    getUserByCountViewModel: GetUserByCountViewModel,
     count: Int,
     ascendingOrder: Boolean = true,
     isList: Boolean = true
 ) {
 
     LaunchedEffect(true) {
-        viewModel.getUserByCount(result = count)
+        getUserByCountViewModel.getUserByCount(result = count)
     }
 
-    val user = viewModel.user.collectAsState()
+    val user = getUserByCountViewModel.user.collectAsState()
     if (user.value != null) {
         val userResults: List<UserResult> = user.value!!.results
         val sortedResult: List<UserResult> = if (ascendingOrder) {
