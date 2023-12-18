@@ -9,7 +9,6 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.jrektabasa.randomuser.model.UserResult
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
 

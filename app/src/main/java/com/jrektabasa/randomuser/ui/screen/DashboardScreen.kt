@@ -52,12 +52,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import com.jrektabasa.randomuser.R
 import com.jrektabasa.randomuser.model.Nationality
 import com.jrektabasa.randomuser.model.UserResult
@@ -67,7 +61,6 @@ import com.jrektabasa.randomuser.ui.components.RandomUserText
 import com.jrektabasa.randomuser.ui.components.RoundedUserIcon
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GenerateUserViewModel
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
-import com.jrektabasa.randomuser.ui.utils.Screens
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.DateTimeParseException

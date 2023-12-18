@@ -14,7 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,11 +22,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.jrektabasa.randomuser.R
 import com.jrektabasa.randomuser.ui.components.RandomUserList
-import com.jrektabasa.randomuser.ui.screen.viewmodel.GenerateUserViewModel
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
