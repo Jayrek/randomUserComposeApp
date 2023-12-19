@@ -10,7 +10,7 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun RandomUserText(
     label: String,
-    fontSize: Int = 15,
+    fontSize: Int = 14,
     color: Color = Color.Black,
     fontWeight: FontWeight = FontWeight.Normal,
 ) {

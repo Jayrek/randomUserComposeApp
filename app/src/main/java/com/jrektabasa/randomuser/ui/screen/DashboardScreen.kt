@@ -124,7 +124,7 @@ fun DashboardUserPanel(
         ) {
             Column(
                 modifier = Modifier
-                    .padding(vertical = 10.dp)
+                    .padding(bottom = 10.dp)
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -140,14 +140,14 @@ fun DashboardUserPanel(
                         Divider(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(top = 24.dp, bottom = 24.dp)
+                                .padding(top = 24.dp, bottom = 20.dp)
                                 .align(Alignment.Center),
                         )
                         Box(
-                            modifier = Modifier.padding(vertical = 24.dp)
+                            modifier = Modifier.padding(vertical = 20.dp)
                         ) {
                             RoundedUserIcon(
-                                icon = user[0].picture.large, size = 120
+                                icon = user[0].picture.large, size = 100
                             )
                         }
                     }
@@ -156,7 +156,7 @@ fun DashboardUserPanel(
                     )
                     RandomUserText(
                         label = "${user[0].name.first} ${user[0].name.last}",
-                        fontSize = 20,
+                        fontSize = 18,
                         fontWeight = FontWeight.Bold
                     )
                     UserInfoRow(
