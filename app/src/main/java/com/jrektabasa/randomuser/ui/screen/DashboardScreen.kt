@@ -49,16 +49,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.jrektabasa.randomuser.R
 import com.jrektabasa.randomuser.model.Nationality
-import com.jrektabasa.randomuser.model.UserResult
 import com.jrektabasa.randomuser.model.nationalities
 import com.jrektabasa.randomuser.model.userCountList
+import com.jrektabasa.randomuser.ui.components.DashboardUserPanel
 import com.jrektabasa.randomuser.ui.components.RandomUserText
-import com.jrektabasa.randomuser.ui.components.RoundedUserIcon
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GenerateUserViewModel
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
 import java.time.OffsetDateTime
@@ -104,82 +102,6 @@ fun DashboardScreen(
     }
 }
 
-@Composable
-fun DashboardUserPanel(
-    viewModel: GetUserByCountViewModel
-) {
-    LaunchedEffect(true) {
-        viewModel.getUserByCount()
-    }
-
-    val userState = viewModel.user.collectAsState()
-    if (userState.value != null) {
-        val user: List<UserResult> = userState.value!!.results
-        Card(
-            modifier = Modifier.padding(5.dp),
-            shape = RoundedCornerShape(5.dp),
-            elevation = CardDefaults.cardElevation(
-                defaultElevation = 5.dp
-            )
-        ) {
-            Column(
-                modifier = Modifier
-                    .padding(bottom = 10.dp)
-                    .fillMaxWidth(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Box(
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Divider(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 24.dp, bottom = 20.dp)
-                                .align(Alignment.Center),
-                        )
-                        Box(
-                            modifier = Modifier.padding(vertical = 20.dp)
-                        ) {
-                            RoundedUserIcon(
-                                icon = user[0].picture.large, size = 100
-                            )
-                        }
-                    }
-                    RandomUserText(
-                        label = "Hi, my name is", color = Color.Gray
-                    )
-                    RandomUserText(
-                        label = "${user[0].name.first} ${user[0].name.last}",
-                        fontSize = 18,
-                        fontWeight = FontWeight.Bold
-                    )
-                    UserInfoRow(
-                        image = Icons.Default.Email, label = user[0].email
-                    )
-
-                    UserInfoRow(
-                        image = Icons.Default.DateRange,
-                        label = formatDate(user[0].dob.date),
-                    )
-                    UserInfoRow(
-                        image = Icons.Default.LocationOn,
-                        label = "${user[0].location.city}, ${user[0].location.country}",
-                    )
-                    UserInfoRow(
-                        image = Icons.Default.Phone,
-                        label = user[0].phone,
-                    )
-                }
-            }
-        }
-    }
-}
 
 @Composable
 fun GenerateUserPanel(
