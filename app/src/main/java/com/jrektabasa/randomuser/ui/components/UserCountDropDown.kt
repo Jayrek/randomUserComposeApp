@@ -1,5 +1,6 @@
 package com.jrektabasa.randomuser.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -7,9 +8,10 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,13 +49,16 @@ fun UserCountDropDown(
                 max = 180.dp
             )
         ) {
-            TextField(
+            OutlinedTextField(
                 value = text,
                 onValueChange = { },
                 readOnly = true,
                 textStyle = MaterialTheme.typography.bodyLarge.copy(
                     textAlign = TextAlign.Center
                 ),
+                trailingIcon = {
+                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = isExpanded)
+                },
                 modifier = Modifier.menuAnchor()
             )
             ExposedDropdownMenu(
@@ -80,6 +85,7 @@ fun GenerateDropDownMenuItem(
     onClick: () -> Unit
 ) {
     DropdownMenuItem(
+        modifier = Modifier.fillMaxWidth().background(Color.White),
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
