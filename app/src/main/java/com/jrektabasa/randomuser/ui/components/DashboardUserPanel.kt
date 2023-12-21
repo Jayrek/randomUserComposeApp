@@ -26,6 +26,7 @@ import com.jrektabasa.randomuser.model.UserResult
 import com.jrektabasa.randomuser.ui.screen.UserInfoRow
 import com.jrektabasa.randomuser.ui.screen.formatDate
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
+import com.jrektabasa.randomuser.ui.utils.extensions.formatDate
 
 @Composable
 fun DashboardUserPanel(
@@ -72,7 +73,7 @@ fun DashboardUserPanel(
 
                     UserInfoRow(
                         image = Icons.Default.DateRange,
-                        label = formatDate(user[0].dob.date),
+                        label = user[0].dob.date.formatDate(),
                     )
                     UserInfoRow(
                         image = Icons.Default.LocationOn,
