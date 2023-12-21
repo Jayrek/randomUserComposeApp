@@ -11,6 +11,8 @@ var nationalities = listOf(
     Nationality("Canada", "CA", false),
     Nationality("Spain", "ES", false),
     Nationality("France", "FR", false),
+    Nationality("New Zealand", "NZ", false),
+    Nationality("United States of America", "US", false),
 )
 
 //AU, BR, CA, CH, DE, DK, ES, FI, FR, GB, IE, IN, IR, MX, NL, NO, NZ, RS, TR, UA, US
