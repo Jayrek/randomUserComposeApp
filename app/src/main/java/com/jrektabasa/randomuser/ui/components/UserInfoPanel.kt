@@ -3,8 +3,10 @@ package com.jrektabasa.randomuser.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
@@ -14,22 +16,22 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Divider
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.jrektabasa.randomuser.model.UserResult
-import com.jrektabasa.randomuser.ui.screen.UserInfoRow
-import com.jrektabasa.randomuser.ui.screen.formatDate
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
 import com.jrektabasa.randomuser.ui.utils.extensions.formatDate
 
 @Composable
-fun DashboardUserPanel(
+fun UserInfoPanel(
     viewModel: GetUserByCountViewModel
 ) {
     LaunchedEffect(true) {
@@ -97,15 +99,37 @@ fun UserIconDashboard(image: String) {
         Divider(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 24.dp, bottom = 20.dp)
-                .align(Alignment.Center),
+                .align(Alignment.Center)
+                .padding(
+                    top = 24.dp,
+                    bottom = 20.dp
+                )
         )
         Box(
             modifier = Modifier.padding(vertical = 20.dp)
         ) {
             RoundedUserIcon(
-                icon = image, size = 100
+                icon = image,
+                size = 100
             )
         }
+    }
+}
+
+
+@Composable
+fun UserInfoRow(
+    image: ImageVector, label: String
+) {
+    Row {
+        Icon(
+            modifier = Modifier.size(20.dp),
+            imageVector = image,
+            contentDescription = null,
+            tint = Color.Gray
+        )
+        RandomUserText(
+            label = label, color = Color.Gray
+        )
     }
 }
