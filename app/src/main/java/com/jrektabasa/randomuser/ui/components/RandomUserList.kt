@@ -12,17 +12,20 @@ import androidx.compose.runtime.collectAsState
 import com.jrektabasa.randomuser.model.UserResult
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
 
-
 @Composable
 fun RandomUserList(
     getUserByCountViewModel: GetUserByCountViewModel,
     count: Int,
+    natList: String,
     ascendingOrder: Boolean = true,
     isList: Boolean = true
 ) {
 
     LaunchedEffect(true) {
-        getUserByCountViewModel.getUserByCount(result = count)
+        getUserByCountViewModel.getUserByCount(
+            result = count,
+            nat = natList
+        )
     }
 
     val user = getUserByCountViewModel.user.collectAsState()

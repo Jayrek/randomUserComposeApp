@@ -56,7 +56,6 @@ fun UserNationalityCheckBox(generateUserViewModel: GenerateUserViewModel) {
                             .padding(5.dp)
                             .align(Alignment.Center)
                     ) {
-
                         Row {
                             Checkbox(
                                 checked = natListState.contains(nat),
@@ -66,9 +65,11 @@ fun UserNationalityCheckBox(generateUserViewModel: GenerateUserViewModel) {
                                     } else {
                                         natListState + nat
                                     }
+
                                     val concatenatedList = natListState
                                         .joinToString(separator = ",")
                                         .lowercase()
+
                                     generateUserViewModel.setUserNationalities(concatenatedList)
                                 },
                                 colors = CheckboxDefaults.colors(MaterialTheme.colorScheme.primary),

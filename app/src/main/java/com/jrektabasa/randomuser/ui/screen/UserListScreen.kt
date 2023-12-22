@@ -32,7 +32,8 @@ import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
 fun UserListScreen(
     getUserByCountViewModel: GetUserByCountViewModel,
     navHostController: NavHostController,
-    count: Int
+    count: Int,
+    natList: String,
 ) {
     Log.d("count", "UserListScreen: $count")
     var ascendingOrder by remember { mutableStateOf(true) }
@@ -82,6 +83,7 @@ fun UserListScreen(
                 RandomUserList(
                     getUserByCountViewModel = getUserByCountViewModel,
                     count = count,
+                    natList = natList,
                     ascendingOrder = ascendingOrder,
                     isList = isList
                 )
