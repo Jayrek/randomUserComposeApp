@@ -20,7 +20,7 @@ class GenerateUserViewModel @Inject constructor(
         _uiState.update { it.copy(userGenerateCount = count) }
     }
 
-    fun setUserNationalities(natList: List<String>) {
+    fun setUserNationalities(natList: String) {
         _uiState.update { it.copy(nationalities = natList) }
     }
 
