@@ -32,8 +32,8 @@ fun RandomUserApp(
             DashboardScreen(
                 getUserByCountViewModel = getUserByCountViewModel,
                 generateUserViewModel = generateUserViewModel,
-                onGenerateUserClicked = { navHostController.navigate(Screens.UserList.name) }
-            )
+                initialCount = uiState.userGenerateCount,
+            ) { navHostController.navigate(Screens.UserList.name) }
         }
         composable(
             route = Screens.UserList.name,
@@ -41,7 +41,8 @@ fun RandomUserApp(
             UserListScreen(
                 getUserByCountViewModel = getUserByCountViewModel,
                 navHostController = navHostController,
-                count = uiState.userGenerateCount
+                count = uiState.userGenerateCount,
+                natList = uiState.nationalities,
             )
         }
     }

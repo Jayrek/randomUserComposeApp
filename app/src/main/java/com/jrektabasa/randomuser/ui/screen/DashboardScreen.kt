@@ -34,6 +34,7 @@ import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
 fun DashboardScreen(
     getUserByCountViewModel: GetUserByCountViewModel,
     generateUserViewModel: GenerateUserViewModel,
+    initialCount: Int,
     onGenerateUserClicked: () -> Unit
 ) {
     Scaffold(topBar = {
@@ -65,8 +66,10 @@ fun DashboardScreen(
                 /** generate user panel composable*/
                 GenerateUserPanel(
                     generateUserViewModel = generateUserViewModel,
-                    onGenerateUser = onGenerateUserClicked
-                )
+                    initialCount = initialCount,
+                ) {
+                    onGenerateUserClicked()
+                }
             }
         }
     }

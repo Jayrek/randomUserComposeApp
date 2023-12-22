@@ -34,10 +34,11 @@ import com.jrektabasa.randomuser.ui.screen.viewmodel.GenerateUserViewModel
 @Composable
 fun GenerateUserPanel(
     generateUserViewModel: GenerateUserViewModel,
+    initialCount: Int,
     onGenerateUser: () -> Unit
 ) {
 
-    var count by remember { mutableIntStateOf(userCountList[0].count) }
+    var count by remember { mutableIntStateOf(initialCount) }
 
     Row(
         modifier = Modifier
@@ -47,10 +48,14 @@ fun GenerateUserPanel(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
+
+            val countIndex = userCountList.indexOfFirst { it.count == count }
+
             /** drop down selection to generate users by count*/
             UserCountDropDown(
-                generateUserViewModel = generateUserViewModel,
-                onCountChange = { count = it })
+                generateUserViewModel = generateUserViewModel, count = countIndex
+            ) { count = it }
+
 
             /** nationality checkbox*/
             UserNationalityCheckBox(generateUserViewModel = generateUserViewModel)
@@ -60,7 +65,7 @@ fun GenerateUserPanel(
             verticalArrangement = Arrangement.Center,
         ) {
             /** generate button*/
-            GenerateUserButton(onGenerateClicked = onGenerateUser)
+            GenerateUserButton { onGenerateUser() }
         }
     }
 }
