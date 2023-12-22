@@ -21,6 +21,14 @@ import com.jrektabasa.randomuser.ui.components.UserInfoPanel
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GenerateUserViewModel
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GetUserByCountViewModel
 
+/**
+ * Renders the main dashboard screen with a top app bar and two panels:
+ * a user information panel and a generate user panel.
+ *
+ * @param getUserByCountViewModel the view model object for the user information panel.
+ * @param generateUserViewModel the view model object for the generate user panel.
+ * @param onGenerateUserClicked the function to call when the generate user button is clicked.
+ */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
@@ -34,28 +42,29 @@ fun DashboardScreen(
                 text = "Random User Generator",
                 color = Color.White
             )
-        }, colors = TopAppBarDefaults.smallTopAppBarColors(
-            containerColor = MaterialTheme.colorScheme.primary
-        ), actions = {
-            ActionIconButton(
-                modifier = Modifier
-                    .padding(end = 16.dp)
-                    .size(25.dp),
-                painter = painterResource(
-                    id = R.drawable.refresh_48
-                ),
-                description = "refresh",
-            ) {
-                getUserByCountViewModel.getUserByCount()
-            }
-        })
+        },
+            colors = TopAppBarDefaults.smallTopAppBarColors(
+                containerColor = MaterialTheme.colorScheme.primary
+            ), actions = {
+                ActionIconButton(
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .size(25.dp),
+                    description = "refresh",
+                    painter = painterResource(id = R.drawable.refresh_48),
+                ) {
+                    getUserByCountViewModel.getUserByCount()
+                }
+            })
     }) {
-
         Box(modifier = Modifier.padding(it)) {
             Column {
+                /** user information panel composable */
                 UserInfoPanel(viewModel = getUserByCountViewModel)
+
+                /** generate user panel composable*/
                 GenerateUserPanel(
-                    viewModel = generateUserViewModel,
+                    generateUserViewModel = generateUserViewModel,
                     onGenerateUser = onGenerateUserClicked
                 )
             }
