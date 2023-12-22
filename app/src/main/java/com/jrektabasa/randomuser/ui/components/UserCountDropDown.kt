@@ -35,10 +35,10 @@ fun UserCountDropDown(
     var isExpanded by remember { mutableStateOf(false) }
     var text by remember { mutableStateOf(userCountList[0].label) }
     Column {
-        Text(
-            text = "Generate users:",
+        RandomUserText(
+            label = "Generate users:",
+            fontSize = 13,
             color = Color.DarkGray,
-            fontSize = 13.sp,
             modifier = Modifier.padding(top = 10.dp)
         )
         ExposedDropdownMenuBox(
@@ -85,7 +85,9 @@ fun GenerateDropDownMenuItem(
     onClick: () -> Unit
 ) {
     DropdownMenuItem(
-        modifier = Modifier.fillMaxWidth().background(Color.White),
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(Color.White),
         text = {
             Column(
                 modifier = Modifier.fillMaxWidth(),
