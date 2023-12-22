@@ -60,7 +60,10 @@ fun UserInfoPanel(
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    UserIconDashboard(image = user[0].picture.large)
+                    UserIconDashboard(
+                        image = user[0].picture.large,
+                        nationality = user[0].nat
+                    )
                     RandomUserText(
                         label = "Hi, my name is", color = Color.Gray
                     )
@@ -92,7 +95,7 @@ fun UserInfoPanel(
 }
 
 @Composable
-fun UserIconDashboard(image: String) {
+fun UserIconDashboard(image: String, nationality: String) {
     Box(
         contentAlignment = Alignment.Center
     ) {
@@ -110,7 +113,9 @@ fun UserIconDashboard(image: String) {
         ) {
             RoundedUserIcon(
                 icon = image,
-                size = 100
+                nationality = nationality,
+                size = 100,
+                natCircle = 30
             )
         }
     }
