@@ -29,10 +29,12 @@ import com.jrektabasa.randomuser.ui.screen.viewmodel.GenerateUserViewModel
 @Composable
 fun UserCountDropDown(
     generateUserViewModel: GenerateUserViewModel,
+    count: Int,
     onCountChange: (Int) -> Unit
 ) {
+
     var isExpanded by remember { mutableStateOf(false) }
-    var text by remember { mutableStateOf(userCountList[0].label) }
+    var text by remember { mutableStateOf(userCountList[count].label) }
     Column {
         RandomUserText(
             label = "Generate users:",

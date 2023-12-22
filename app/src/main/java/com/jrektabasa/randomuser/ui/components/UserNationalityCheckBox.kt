@@ -26,6 +26,11 @@ import androidx.compose.ui.unit.sp
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GenerateUserViewModel
 import com.jrektabasa.randomuser.ui.utils.Constants
 
+/**
+ * Renders a set of checkboxes for selecting nationalities.
+ *
+ * @param generateUserViewModel the view model object for the generate user screen.
+ */
 @Composable
 fun UserNationalityCheckBox(generateUserViewModel: GenerateUserViewModel) {
 
@@ -51,7 +56,6 @@ fun UserNationalityCheckBox(generateUserViewModel: GenerateUserViewModel) {
                             .padding(5.dp)
                             .align(Alignment.Center)
                     ) {
-
                         Row {
                             Checkbox(
                                 checked = natListState.contains(nat),
@@ -61,9 +65,11 @@ fun UserNationalityCheckBox(generateUserViewModel: GenerateUserViewModel) {
                                     } else {
                                         natListState + nat
                                     }
+
                                     val concatenatedList = natListState
                                         .joinToString(separator = ",")
                                         .lowercase()
+
                                     generateUserViewModel.setUserNationalities(concatenatedList)
                                 },
                                 colors = CheckboxDefaults.colors(MaterialTheme.colorScheme.primary),
