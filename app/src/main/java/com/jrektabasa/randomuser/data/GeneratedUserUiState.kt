@@ -6,6 +6,6 @@ package com.jrektabasa.randomuser.data
 data class GeneratedUserUiState(
     /** count of users generated (10, 20, 50, 100)*/
     val userGenerateCount: Int = 0,
-    /** list of nationality of users*/
-    val nationalities: List<String> = listOf(),
+    /** concatenated list of nationalities of users*/
+    val nationalities: String = "",
 )
