@@ -38,8 +38,11 @@ fun RandomUserList(
                 itemsIndexed(items = sortedResult) { index, user ->
                     ListTileUserItem(
                         icon = user.picture.medium,
+                        userName = user.login.username,
                         name = "${user.name.first} ${user.name.last}",
                         email = user.email,
+                        address = "${user.location.city}, ${user.location.country}",
+                        nationality = user.nat,
                     ) {
                         Log.d("ListTileUserItem", "$index. ${user.name.first}")
                     }
@@ -52,8 +55,11 @@ fun RandomUserList(
                 itemsIndexed(items = sortedResult) { index, user ->
                     GridTileUserItem(
                         icon = user.picture.medium,
+                        userName = user.login.username,
                         name = "${user.name.first} ${user.name.last}",
-                        email = user.email
+                        email = user.email,
+                        address = "${user.location.city}, ${user.location.country}",
+                        nationality = user.nat,
                     ) {
                         Log.d("ListTileUserItem", "$index. ${user.name.first}")
                     }

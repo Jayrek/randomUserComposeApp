@@ -14,7 +14,7 @@ class GetUserByCountRepositoryImpl @Inject constructor(
         page: Int,
         result: Int,
         gender: String,
-        nat: List<String>
+        nat: String
     ): RandomUserResult {
         return try {
             api.getRandomUserList(

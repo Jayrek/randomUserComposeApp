@@ -22,7 +22,7 @@ class GetUserByCountViewModel @Inject constructor(
         page: Int = 1,
         result: Int = 1,
         gender: String = "",
-        nat: List<String> = emptyList()
+        nat: String = ""
     ) {
         viewModelScope.launch {
             val response = repository.getRandomUserByCount(

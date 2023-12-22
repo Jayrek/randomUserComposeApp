@@ -45,7 +45,7 @@ fun UserListScreen(
                     containerColor = MaterialTheme.colorScheme.primary
                 ),
                 navigationIcon = {
-                    IconButton(onClick = { navHostController.popBackStack() }) {
+                    IconButton(onClick = { navHostController.navigateUp() }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = "back",

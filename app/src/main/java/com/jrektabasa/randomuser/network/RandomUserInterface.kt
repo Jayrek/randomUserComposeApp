@@ -10,7 +10,7 @@ interface RandomUserInterface {
         @Query("page") page: Int,
         @Query("results") result: Int,
         @Query("gender") gender: String,
-        @Query("nat") nat: List<String>,
+        @Query("nat") nat: String,
     ): RandomUserResult
 }
 
