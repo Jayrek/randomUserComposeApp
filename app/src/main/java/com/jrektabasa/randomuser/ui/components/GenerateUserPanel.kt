@@ -9,12 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -24,9 +22,17 @@ import com.jrektabasa.randomuser.model.nationalities
 import com.jrektabasa.randomuser.model.userCountList
 import com.jrektabasa.randomuser.ui.screen.viewmodel.GenerateUserViewModel
 
+/**
+ * Renders a panel with a drop-down selection for the number of users to generate,
+ * a set of checkboxes for selecting nationalities, and
+ * a button to generate the users.
+ *
+ * @param generateUserViewModel the view model object for the UI component.
+ * @param onGenerateUser the function to call when the generate button is clicked.
+ */
 @Composable
 fun GenerateUserPanel(
-    viewModel: GenerateUserViewModel,
+    generateUserViewModel: GenerateUserViewModel,
     onGenerateUser: () -> Unit
 ) {
     var count by remember { mutableIntStateOf(userCountList[0].count) }
@@ -39,12 +45,13 @@ fun GenerateUserPanel(
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column {
+            /** drop down selection to generate users by count*/
             UserCountDropDown(
-                generateUserViewModel = viewModel,
+                generateUserViewModel = generateUserViewModel,
                 onCountChange = { count = it })
-            UserNationalityCheckBox(
-                nationalities = nationalities
-            ) { option ->
+
+            /** nationality checkbox*/
+            UserNationalityCheckBox(nationalities = nationalities) { option ->
                 option.isSelected = !option.isSelected
             }
         }
@@ -52,22 +59,15 @@ fun GenerateUserPanel(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
-
-            GenerateUserButton(
-                onGenerateClicked = onGenerateUser
-            )
+            /** generate button*/
+            GenerateUserButton(onGenerateClicked = onGenerateUser)
         }
     }
 }
 
-
 @Composable
-fun GenerateUserButton(
-    onGenerateClicked: () -> Unit
-) {
-    Box(
-        contentAlignment = Alignment.Center
-    ) {
+fun GenerateUserButton(onGenerateClicked: () -> Unit) {
+    Box(contentAlignment = Alignment.Center) {
         Button(
             modifier = Modifier.fillMaxWidth(),
             contentPadding = PaddingValues(vertical = 40.dp),
@@ -77,10 +77,4 @@ fun GenerateUserButton(
             Text(text = "Generate")
         }
     }
-}
-
-@Composable
-fun CheckBoxDemo() {
-    val checkedState = remember { mutableStateOf(true) }
-    Checkbox(checked = checkedState.value, onCheckedChange = { checkedState.value = it })
 }
